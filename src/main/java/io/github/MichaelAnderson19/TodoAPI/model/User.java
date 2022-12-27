@@ -24,7 +24,7 @@ public class User {
     private String email;
     @Column(name="password", nullable=false)
     private String password;
-    @Column(name="roles", nullable=false)
+    @Column(name="roles")
     private String roles; //should be a collection
 
 }

@@ -26,10 +26,11 @@ public class UserService {
                         .email(registrationDto.getEmail())
                         .password(encoder.encode(registrationDto.getPassword()))
                         .username(registrationDto.getUsername()) //username should also be unique
+                        .roles("USER")
                         .build()
         );
     }
-
+    //change password
     //update user
 
     //delete user

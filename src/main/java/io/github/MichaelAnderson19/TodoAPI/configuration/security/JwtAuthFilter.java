@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
 
         final String jwtToken = parseJwtFromRequest(request);
-
         if (jwtToken != null) { //TODO validate the token
             final String userEmail = jwtUtils.extractEmail(jwtToken);
             //if email is set and the securitycontext is empty (no one currently logged in)

@@ -1,6 +1,7 @@
 package io.github.MichaelAnderson19.TodoAPI.model.security;
 
 import io.github.MichaelAnderson19.TodoAPI.model.User;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,8 +12,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-@Service
+//@Service
 @RequiredArgsConstructor
+@Data
 public class SecurityUser implements UserDetails {
 
     private final User user;
@@ -28,6 +30,7 @@ public class SecurityUser implements UserDetails {
     }
 
     private Collection<? extends GrantedAuthority> mapSingleRole(String role) {
+        role = "ROLE_USER";
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }
 
