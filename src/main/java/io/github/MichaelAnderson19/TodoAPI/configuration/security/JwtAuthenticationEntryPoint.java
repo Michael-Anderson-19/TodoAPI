@@ -17,6 +17,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException) throws IOException, ServletException {
 
         response.addHeader("access denied reason", "authentication required");
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Un-Authenticated");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: UnAuthenticated");
     }
 }
