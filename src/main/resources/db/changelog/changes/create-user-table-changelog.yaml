@@ -8,11 +8,12 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: INT
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
+                    primaryKeyName: PK_USER
               - column:
                   name: email
                   type: VARCHAR(255)
@@ -29,4 +30,11 @@ databaseChangeLog:
                   type: VARCHAR(60)
                   constraints:
                     nullable: false
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: updated_at
+                  type: DATETIME
+
 
