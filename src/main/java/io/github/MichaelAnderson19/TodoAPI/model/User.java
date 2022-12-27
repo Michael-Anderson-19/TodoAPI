@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name="users")
-public class User {
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,6 @@ public class User {
     @Column(name="password", nullable=false)
     private String password;
     @Column(name="roles")
-    private String roles; //should be a collection
+    private String roles;
 
 }
