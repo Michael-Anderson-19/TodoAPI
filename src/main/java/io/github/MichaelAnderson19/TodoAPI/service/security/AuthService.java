@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,7 +26,6 @@ public class AuthService {
             Authentication authentication = authenticateUser(loginRequest.getUserEmail(), loginRequest.getUserPassword());
             SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
             String jwtToken = jwtUtils.generateJwt(userDetails);
-
             return LoginResponseDto
                     .builder()
                     .userEmail(userDetails.getUsername())

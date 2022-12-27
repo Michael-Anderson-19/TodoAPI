@@ -1,5 +1,7 @@
 package io.github.MichaelAnderson19.TodoAPI.configuration.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +48,18 @@ public class JwtUtils {
         return expirationDate.before(new Date());
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean validateTokenCredentials(String token, UserDetails userDetails) { //token details validation
         final String email = extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            System.out.println("invalid token sent");
+            return false;
+        }
     }
 }

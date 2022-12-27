@@ -38,14 +38,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
 
         final String jwtToken = parseJwtFromRequest(request);
-        if (jwtToken != null) { //TODO validate the token
+        if (jwtToken != null && jwtUtils.validateToken(jwtToken)) { 
             final String userEmail = jwtUtils.extractEmail(jwtToken);
             //if email is set and the securitycontext is empty (no one currently logged in)
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 //then get the user details from the database
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
                 //validate the token against the expiration date and the email inside of the request vs database
-                if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
+                if (jwtUtils.validateTokenCredentials(jwtToken, userDetails)) {
                     //create authentication token (authentciation object)
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     //builds details from request ???
