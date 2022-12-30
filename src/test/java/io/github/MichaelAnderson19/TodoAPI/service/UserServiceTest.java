@@ -1,6 +1,6 @@
 package io.github.MichaelAnderson19.TodoAPI.service;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.RegistrationDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserAlreadyExistsException;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
@@ -9,7 +9,6 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.Assertions.*;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public class UserServiceTest {
     @DisplayName("When creating a new user, that does not already exist within the database, return that new user")
     public void happyPathCreateUserTest(){
         String encodedPassword = "ENCODED_PASSWORD_12345";
-        RegistrationDto dto = new RegistrationDto("test@test.com", "password", "test","USER");
+        RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test","USER");
         User user = User.builder().id(null).email(dto.getEmail()).password(encodedPassword).username(dto.getUsername()).roles(dto.getRoles()).build();
         User savedUser = User.builder().id(1l).email(dto.getEmail()).password(encodedPassword).username(dto.getUsername()).roles(dto.getRoles()).build();
         when(passwordEncoder.encode(dto.getPassword())).thenReturn(encodedPassword);
@@ -53,7 +52,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("When creating a new user, that already exist within the database, return that new user")
     public void unhappyPathCreateUserTest(){
-        RegistrationDto dto = new RegistrationDto("test@test.com", "password", "test","USER");
+        RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test","USER");
         User user = User.builder().id(null).email(dto.getEmail()).password(dto.getPassword()).username(dto.getUsername()).roles(dto.getRoles()).build();
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(user));
 

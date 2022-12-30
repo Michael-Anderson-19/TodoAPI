@@ -1,4 +1,4 @@
-package io.github.MichaelAnderson19.TodoAPI.dto;
+package io.github.MichaelAnderson19.TodoAPI.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

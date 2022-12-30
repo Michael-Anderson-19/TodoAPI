@@ -1,4 +1,4 @@
-package io.github.MichaelAnderson19.TodoAPI.dto;
+package io.github.MichaelAnderson19.TodoAPI.dto.auth;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegistrationDto {
+public class RegistrationRequestDto {
 
     private String email;
     private String password;

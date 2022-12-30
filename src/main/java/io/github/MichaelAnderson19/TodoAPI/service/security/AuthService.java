@@ -1,8 +1,8 @@
 package io.github.MichaelAnderson19.TodoAPI.service.security;
 
 import io.github.MichaelAnderson19.TodoAPI.configuration.security.JwtUtils;
-import io.github.MichaelAnderson19.TodoAPI.dto.LoginRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.LoginResponseDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
 import io.github.MichaelAnderson19.TodoAPI.model.security.SecurityUser;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,9 @@ public class AuthService {
     public LoginResponseDto login(LoginRequestDto loginRequest) {
 
             Authentication authentication = authenticateUser(loginRequest.getUserEmail(), loginRequest.getUserPassword());
+
+            setSecurityContextHolder(authentication);
+
             SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
             String jwtToken = jwtUtils.generateJwt(userDetails);
             return LoginResponseDto
@@ -37,8 +40,11 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
+    }
+
+    private void setSecurityContextHolder(Authentication authentication){
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }
