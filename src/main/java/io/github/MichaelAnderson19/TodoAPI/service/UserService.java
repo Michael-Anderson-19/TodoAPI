@@ -23,13 +23,13 @@ public class UserService {
     private final PasswordEncoder encoder;
 
     //create user
-    public User createUser(RegistrationRequestDto registrationDto) {
+    public UserDto createUser(RegistrationRequestDto registrationDto) {
 
         if (userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException(String.format("Exception: An account with the email address %s already exists", registrationDto.getEmail()));
         }
 
-        return userRepository.save(
+        User user = userRepository.save(
                 User.builder()
                         .email(registrationDto.getEmail())
                         .password(encoder.encode(registrationDto.getPassword()))
@@ -37,6 +37,8 @@ public class UserService {
                         .roles("USER")
                         .build()
         );
+
+        return UserDto.builder().email(user.getEmail()).username(user.getUsername()).build();
     }
 
     //change password

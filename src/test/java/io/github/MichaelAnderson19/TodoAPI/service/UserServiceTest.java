@@ -35,7 +35,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("When creating a new user, that does not already exist within the database, return that new user")
+    @DisplayName("When creating a new user, that does not already exist within the database, return a UserDto")
     public void happyPathCreateUserTest(){
         String encodedPassword = "ENCODED_PASSWORD_12345";
         RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test","USER");
@@ -45,10 +45,11 @@ public class UserServiceTest {
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.<User>empty());
         when(userRepository.save(user)).thenReturn(savedUser);
 
-        User result = userService.createUser(dto);
+        UserDto result = userService.createUser(dto);
 
         assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(savedUser);
+        assertThat(result.getEmail()).isEqualTo(savedUser.getEmail());
+        assertThat(result.getUsername()).isEqualTo(savedUser.getUsername());
 
         verify(passwordEncoder,times(1)).encode(dto.getPassword());
         verify(userRepository,times(1)).findByEmail(dto.getEmail());
