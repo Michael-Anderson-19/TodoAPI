@@ -30,7 +30,7 @@ public class User extends BaseEntity{
     private String password;
     @Column(name="roles")
     private String roles;
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TodoItem> items = new ArrayList<>();
 

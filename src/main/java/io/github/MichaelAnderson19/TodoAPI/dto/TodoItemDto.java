@@ -15,12 +15,16 @@ public class TodoItemDto {
     private Long id;
     private String userEmail;
     private String content;
+    private String priority;
+    private boolean complete;
 
     public static TodoItemDto mapToDto(TodoItem item) {
         return TodoItemDto.builder()
                 .id(item.getId())
                 .content(item.getContent())
                 .userEmail(item.getUser().getEmail())
+                .priority(item.getPriority().toString())
+                .complete(item.isComplete())
                 .build();
     }
 }

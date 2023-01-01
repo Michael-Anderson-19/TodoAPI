@@ -1,5 +1,6 @@
 package io.github.MichaelAnderson19.TodoAPI;
 
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,10 +16,14 @@ public class TodoApiApplication {
 		SpringApplication.run(TodoApiApplication.class, args);
 	}
 
-//	@Bean
-//	CommandLineRunner init(UserService userService) {
-//		return args -> {
-//			//userService.createUser(new RegistrationDto("michael", "michael", "password","USER"));
-//		};
-//	}
+	@Bean
+	CommandLineRunner init(UserService userService) {
+		return args -> {
+			try {
+				userService.createUser(new RegistrationRequestDto("michael", "password", "michael","USER"));
+			} catch(Exception e) {
+				System.out.println("already created");
+			}
+		};
+	}
 }

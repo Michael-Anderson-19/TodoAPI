@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: oof
+      author: me
+      changes:
+        - createTable:
+            tableName: todo_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: PK_TODO_ITEMS
+              - column:
+                  name: content
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: complete
+                  type: BIT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: FK_TODO_ITEMS_USERS
+                    nullable: false
+              - column:
+                  name: priority
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+              - column:
+                  name: updated_at
+                  type: datetime

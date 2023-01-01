@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TodoItemCreationDto {
+public class TodoItemRequestDto {
 
     private String content;
-    //private Priority priority; <- list of priorities to get from the backend and display in creation form drop down
+    private String priority;
+    private boolean complete;
 
 
 }
