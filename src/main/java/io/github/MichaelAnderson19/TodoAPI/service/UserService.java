@@ -87,11 +87,16 @@ public class UserService {
         userRepository.delete(user);
     }
     //get user
-    public UserDto getUser(String principalEmail) {
-        User user = userRepository.findByEmail(principalEmail)
-                .orElseThrow(() -> new UserNotFoundException(String.format("user with email %s not found", principalEmail)));
+    public User getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("user with email %s not found", email)));
+
+    }
+    public UserDto getUserDto(String email) {
+        User user = getUser(email);
         return UserDto.builder().email(user.getEmail()).username(user.getUsername()).build();
     }
+
     //TODO refactor rest of code to use this once learnt how to spy in mockito
     private boolean verifyPassword(String rawPassword, String encodedPassword) {
         return encoder.matches(rawPassword, encodedPassword);

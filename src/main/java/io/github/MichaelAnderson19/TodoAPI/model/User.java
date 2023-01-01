@@ -1,10 +1,14 @@
 package io.github.MichaelAnderson19.TodoAPI.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,5 +30,8 @@ public class User extends BaseEntity{
     private String password;
     @Column(name="roles")
     private String roles;
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonIgnore
+    private List<TodoItem> items = new ArrayList<>();
 
 }
