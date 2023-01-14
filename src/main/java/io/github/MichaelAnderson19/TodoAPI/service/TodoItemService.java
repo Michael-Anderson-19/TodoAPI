@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class TodoItemService {
 
     private final TodoItemRepository todoItemRepository;
+
     private final UserService userService;
 
     public TodoItemDto addNewTodoItem(String email, TodoItemRequestDto todoItemCreation) {
@@ -34,9 +35,8 @@ public class TodoItemService {
     }
 
     public TodoItem getTodoItem(String email, Long itemId) { //TODO could mark as private
-        User user = userService.getUser(email);
-        return todoItemRepository.findByIdAndUser(itemId, user)
-                .orElseThrow( ()->new TodoItemNotFoundException(
+         return todoItemRepository.findByIdAndUserEmail(itemId, email)
+                 .orElseThrow( ()->new TodoItemNotFoundException(
                         String.format("Error: Todo Item not found")
                 ));
     }
@@ -48,8 +48,7 @@ public class TodoItemService {
     }
 
     public List<TodoItemDto> getAllUsersTodoItems(String email) {
-        User user  = userService.getUser(email);
-        return user.getItems()
+        return todoItemRepository.findAllByUserEmail(email)
                 .stream()
                 .map(TodoItemDto::mapToDto)
                 .collect(Collectors.toList());
@@ -60,10 +59,10 @@ public class TodoItemService {
         TodoItem item = getTodoItem(email, itemId);
         item.setContent(itemDto.getContent());
         item.setPriority(ItemPriority.valueOf(itemDto.getPriority()));
+
         return TodoItemDto.mapToDto(
                 todoItemRepository.save(item));
     }
-
 
     //toggle complete
     public TodoItemDto toggleComplete(String email, Long itemId) {
@@ -74,12 +73,14 @@ public class TodoItemService {
             todoItemRepository.save(item)
         );
     }
+
     //delete
     public void deleteItem(String email, Long itemId){
         TodoItem item = getTodoItem(email,itemId);
         todoItemRepository.delete(item);
     }
 
+    //get list of available priorities
     public List<String> getPriorities() {
        return Arrays.stream(ItemPriority.values()).map(ItemPriority::toString).collect(Collectors.toList());
     }

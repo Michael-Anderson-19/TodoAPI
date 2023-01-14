@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface TodoItemRepository extends JpaRepository<TodoItem, Long> {
 
-    Optional<TodoItem> findByIdAndUser(Long id, User user);
-    List<TodoItem> findAllByUser(User user);
+    Optional<TodoItem> findByIdAndUserEmail(Long id, String userEmail);
+
+    List<TodoItem> findAllByUserEmail(String userEmail);
 }
