@@ -5,6 +5,7 @@ import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
 import io.github.MichaelAnderson19.TodoAPI.shared.ItemPriority;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,19 +31,12 @@ public class TodoItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<TodoItemDto> getTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
         TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(),itemId);
-        return ResponseEntity.ok().body(itemDto);
-    }
-
-    @GetMapping("/priorities")
-    public ResponseEntity<List<String>> getAllPriorities(){
-        return ResponseEntity.ok().body(
-                todoItemService.getPriorities()
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
     @GetMapping({"","/"})
     public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal) {
-        return ResponseEntity.ok().body(
+        return ResponseEntity.status(HttpStatus.OK).body(
                 todoItemService.getAllUsersTodoItems(principal.getName())
         );
     }
@@ -50,21 +44,23 @@ public class TodoItemController {
     @PostMapping({"","/"})
     public ResponseEntity<TodoItemDto> createTodoItem(Principal principal, @RequestBody TodoItemRequestDto todoItemRequestDto) {
         TodoItemDto itemDto = todoItemService.addNewTodoItem(principal.getName(), todoItemRequestDto);
-        System.out.println("\n\n\n\n\n\n"+todoItemRequestDto.toString()+"\n\n\n\n");
+        //create uri to created item
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(itemDto.getId().toString()).toUriString());
-        return ResponseEntity.created(uri).body(itemDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(itemDto);
     }
 
     @GetMapping("/toggle/{itemId}")
-    public ResponseEntity<TodoItemDto> toggleItemComplete(Principal principal,@PathVariable("itemId") Long itemId) {
-        return ResponseEntity.ok().body(
-                todoItemService.toggleComplete(principal.getName(), itemId)
-        );
+    public ResponseEntity<TodoItemDto> toggleItemComplete(Principal principal, @PathVariable("itemId") Long itemId) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{itemId}")
-    public ResponseEntity<TodoItemDto> updateTodoItem(Principal principal, @PathVariable("itemId") Long itemId, @RequestBody TodoItemRequestDto todoItemRequestDto) {
-        return ResponseEntity.ok().body(
+    public ResponseEntity<TodoItemDto> updateTodoItem(Principal principal,
+                                                      @PathVariable("itemId") Long itemId,
+                                                      @RequestBody TodoItemRequestDto todoItemRequestDto) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(
                 todoItemService.updateTodoItem(
                         principal.getName(),
                         itemId,
@@ -76,6 +72,13 @@ public class TodoItemController {
     @DeleteMapping("/{itemId}")
     public ResponseEntity deleteTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
         todoItemService.deleteItem(principal.getName(), itemId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/priorities")
+    public ResponseEntity<List<String>> getAllPriorities(){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                todoItemService.getPriorities()
+        );
     }
 }
