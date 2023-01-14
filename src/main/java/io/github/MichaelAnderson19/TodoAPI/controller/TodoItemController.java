@@ -4,6 +4,7 @@ import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
 import io.github.MichaelAnderson19.TodoAPI.shared.ItemPriority;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class TodoItemController {
     }
 
     @PostMapping({"","/"})
-    public ResponseEntity<TodoItemDto> createTodoItem(Principal principal, @RequestBody TodoItemRequestDto todoItemRequestDto) {
+    public ResponseEntity<TodoItemDto> createTodoItem(Principal principal, @Valid @RequestBody TodoItemRequestDto todoItemRequestDto) {
         TodoItemDto itemDto = todoItemService.addNewTodoItem(principal.getName(), todoItemRequestDto);
         //create uri to created item
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(itemDto.getId().toString()).toUriString());
@@ -58,7 +59,7 @@ public class TodoItemController {
     @PutMapping("/{itemId}")
     public ResponseEntity<TodoItemDto> updateTodoItem(Principal principal,
                                                       @PathVariable("itemId") Long itemId,
-                                                      @RequestBody TodoItemRequestDto todoItemRequestDto) {
+                                                      @Valid @RequestBody TodoItemRequestDto todoItemRequestDto) {
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 todoItemService.updateTodoItem(
