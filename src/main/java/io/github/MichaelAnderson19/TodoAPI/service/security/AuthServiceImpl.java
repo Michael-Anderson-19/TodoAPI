@@ -4,7 +4,7 @@ import io.github.MichaelAnderson19.TodoAPI.configuration.security.JwtUtils;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
 import io.github.MichaelAnderson19.TodoAPI.model.security.SecurityUser;
-import io.github.MichaelAnderson19.TodoAPI.service.UserService;
+import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,15 +14,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
+    @Override
     public LoginResponseDto login(LoginRequestDto loginRequest) {
 
-            Authentication authentication = authenticateUser(loginRequest.getUserEmail(), loginRequest.getUserPassword());
+            Authentication authentication = authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
 
             setSecurityContextHolder(authentication);
 
