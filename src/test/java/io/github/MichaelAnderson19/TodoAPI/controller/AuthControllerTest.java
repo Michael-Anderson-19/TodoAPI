@@ -2,13 +2,13 @@ package io.github.MichaelAnderson19.TodoAPI.controller;
 
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.*;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
-import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import io.github.MichaelAnderson19.TodoAPI.dto.UserDto;
 import io.github.MichaelAnderson19.TodoAPI.exception.InvalidCredentialsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserAlreadyExistsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserNotFoundException;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
+import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class AuthControllerTest {
         String password = "password";
         String token = "jwtToken";
 
-        LoginRequestDto dtoRequest = LoginRequestDto.builder().userEmail(email).userPassword(password).build();
+        LoginRequestDto dtoRequest = LoginRequestDto.builder().email(email).password(password).build();
         LoginResponseDto dtoResponse = builder().userEmail(email).jwtToken(token).build();
 
         when(authService.login(dtoRequest)).thenReturn(dtoResponse);
