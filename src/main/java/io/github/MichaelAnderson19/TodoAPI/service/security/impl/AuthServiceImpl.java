@@ -1,8 +1,8 @@
 package io.github.MichaelAnderson19.TodoAPI.service.security.impl;
 
 import io.github.MichaelAnderson19.TodoAPI.configuration.security.JwtUtils;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.LoginRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.JwtResponse;
 import io.github.MichaelAnderson19.TodoAPI.model.security.SecurityUser;
 import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +21,21 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
 
     @Override
-    public LoginResponseDto login(LoginRequestDto loginRequest) {
+    public JwtResponse login(LoginRequestDto loginRequest) {
 
-            Authentication authentication = authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+        Authentication authentication = authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
 
-            setSecurityContextHolder(authentication);
+        setSecurityContextHolder(authentication);
 
-            SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
-            String jwtToken = jwtUtils.generateJwt(userDetails);
-            return LoginResponseDto
-                    .builder()
-                    .userEmail(userDetails.getUsername())
-                    .jwtToken(jwtToken)
-                    .build();
+        SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
+        String jwtToken = jwtUtils.generateJwt(userDetails);
+
+        return JwtResponse
+                .builder()
+                .userEmail(userDetails.getUsername())
+                .jwtToken(jwtToken)
+                .role(userDetails.getAuthorities().toString()) //check
+                .build();
     }
 
     private Authentication authenticateUser(String email, String password) {
@@ -43,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
         return authentication;
     }
 
-    private void setSecurityContextHolder(Authentication authentication){
+    private void setSecurityContextHolder(Authentication authentication) {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

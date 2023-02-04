@@ -1,6 +1,6 @@
 package io.github.MichaelAnderson19.TodoAPI;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

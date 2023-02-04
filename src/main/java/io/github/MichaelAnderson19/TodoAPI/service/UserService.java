@@ -1,17 +1,17 @@
 package io.github.MichaelAnderson19.TodoAPI.service;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.UserDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.DeleteUserRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.PasswordChangeRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.UpdateUserRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.response.UserDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.DeleteUserRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.PasswordChangeRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.UpdateUserRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.exception.InvalidCredentialsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserAlreadyExistsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserNotFoundException;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
+import io.github.MichaelAnderson19.TodoAPI.shared.UserRole;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +28,15 @@ public class UserService {
         if (userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException(String.format("Exception: An account with the email address %s already exists", registrationDto.getEmail()));
         }
+        
+        //check for user with username if does thrwo exception
 
         User user = userRepository.save(
                 User.builder()
                         .email(registrationDto.getEmail())
                         .password(encoder.encode(registrationDto.getPassword()))
                         .username(registrationDto.getUsername()) //username should also be unique
-                        .roles("USER")
+                        .role(UserRole.USER)
                         .build()
         );
 
@@ -73,7 +75,7 @@ public class UserService {
     }
 
     //delete user
-    public void deleteUser(String principalEmail,DeleteUserRequestDto deleteUserDto) { //may invert ifs
+    public void deleteUser(String principalEmail, DeleteUserRequestDto deleteUserDto) { //may invert ifs
         if (!deleteUserDto.getEmail().equals(principalEmail)) {
             throw new InvalidCredentialsException("Error: email does not match");
         }
@@ -86,12 +88,14 @@ public class UserService {
         }
         userRepository.delete(user);
     }
+
     //get user
     public User getUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(String.format("user with email %s not found", email)));
 
     }
+
     public UserDto getUserDto(String email) {
         User user = getUser(email);
         return UserDto.builder().email(user.getEmail()).username(user.getUsername()).build();

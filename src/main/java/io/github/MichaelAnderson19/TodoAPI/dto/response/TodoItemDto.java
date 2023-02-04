@@ -1,4 +1,4 @@
-package io.github.MichaelAnderson19.TodoAPI.dto;
+package io.github.MichaelAnderson19.TodoAPI.dto.response;
 
 import io.github.MichaelAnderson19.TodoAPI.model.TodoItem;
 import lombok.AllArgsConstructor;

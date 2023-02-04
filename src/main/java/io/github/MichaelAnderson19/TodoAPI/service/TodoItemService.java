@@ -1,7 +1,7 @@
 package io.github.MichaelAnderson19.TodoAPI.service;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.request.TodoItemRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.response.TodoItemDto;
 import io.github.MichaelAnderson19.TodoAPI.exception.TodoItemNotFoundException;
 import io.github.MichaelAnderson19.TodoAPI.model.TodoItem;
 import io.github.MichaelAnderson19.TodoAPI.model.User;

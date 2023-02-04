@@ -1,10 +1,10 @@
 package io.github.MichaelAnderson19.TodoAPI.service;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.UserDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.DeleteUserRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.PasswordChangeRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.UpdateUserRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.response.UserDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.DeleteUserRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.PasswordChangeRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.UpdateUserRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.exception.InvalidCredentialsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserAlreadyExistsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserNotFoundException;
@@ -15,7 +15,6 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.Assertions.*;
 import java.util.Optional;

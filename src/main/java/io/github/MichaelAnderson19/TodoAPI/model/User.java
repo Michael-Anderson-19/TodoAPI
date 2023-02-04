@@ -1,6 +1,7 @@
 package io.github.MichaelAnderson19.TodoAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.MichaelAnderson19.TodoAPI.shared.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,21 +16,22 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="users")
-public class User extends BaseEntity{
+@Table(name = "users")
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id") //user_id?
+    @Column(name = "id") //user_id?
     private Long id;
-    @Column(name="username", nullable=false)
+    @Column(name = "username", nullable = false)
     private String username;
-    @Column(name="email", nullable=false)
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name="password", nullable=false)
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name="roles")
-    private String roles;
+    @Column(name = "roles")
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TodoItem> items = new ArrayList<>();

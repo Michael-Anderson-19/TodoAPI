@@ -1,21 +1,19 @@
 package io.github.MichaelAnderson19.TodoAPI.controller;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.TodoItemRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.response.TodoItemDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.request.TodoItemRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
-import io.github.MichaelAnderson19.TodoAPI.shared.ItemPriority;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/todo")
@@ -30,19 +28,21 @@ public class TodoItemController {
     private final TodoItemService todoItemService;
 
     @GetMapping("/{itemId}")
+    @PreAuthorize("hasRole('user')")
     public ResponseEntity<TodoItemDto> getTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
-        TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(),itemId);
+        TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(), itemId);
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
-    @GetMapping({"","/"})
+    @GetMapping({"", "/"})
     public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 todoItemService.getAllUsersTodoItems(principal.getName())
         );
     }
 
-    @PostMapping({"","/"})
+    //https://www.bezkoder.com/spring-boot-jwt-authentication/
+    @PostMapping({"", "/"})
     public ResponseEntity<TodoItemDto> createTodoItem(Principal principal, @Valid @RequestBody TodoItemRequestDto todoItemRequestDto) {
         TodoItemDto itemDto = todoItemService.addNewTodoItem(principal.getName(), todoItemRequestDto);
         //create uri to created item
@@ -77,7 +77,7 @@ public class TodoItemController {
     }
 
     @GetMapping("/priorities")
-    public ResponseEntity<List<String>> getAllPriorities(){
+    public ResponseEntity<List<String>> getAllPriorities() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 todoItemService.getPriorities()
         );

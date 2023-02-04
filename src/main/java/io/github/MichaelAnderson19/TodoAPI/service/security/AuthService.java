@@ -1,8 +1,8 @@
 package io.github.MichaelAnderson19.TodoAPI.service.security;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.LoginRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.JwtResponse;
 
 public interface AuthService {
-    LoginResponseDto login(LoginRequestDto loginRequest);
+    JwtResponse login(LoginRequestDto loginRequest);
 }

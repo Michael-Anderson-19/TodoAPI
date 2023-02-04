@@ -31,31 +31,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-
-        final String jwtToken = parseJwtFromRequest(request);
-        if (jwtToken != null && jwtUtils.validateToken(jwtToken)) {
-            final String userEmail = jwtUtils.extractEmail(jwtToken);
-            //if email is set and the securitycontext is empty (no one currently logged in)
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                //then get the user details from the database
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-                //validate the token against the expiration date and the email inside of the request vs database
-                if (jwtUtils.validateTokenCredentials(jwtToken, userDetails)) {
-                    //create authentication token (authentciation object)
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    //converts the raw java class of the httprequest into an internal split class (webauthenticationdetailsource)
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    //add the authentication to securitycontext
-                    SecurityContextHolder.getContext().setAuthentication(authToken); //this
+        try { //can remove this
+            final String jwtToken = parseJwtFromRequest(request);
+            if (jwtToken != null && jwtUtils.validateToken(jwtToken)) {
+                final String userEmail = jwtUtils.extractEmail(jwtToken);
+                //if email is set and the securitycontext is empty (no one currently logged in)
+                if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    //then get the user details from the database
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+                    //validate the token against the expiration date and the email inside of the request vs database
+                    if (jwtUtils.validateTokenCredentials(jwtToken, userDetails)) {  /////////dis jsut me
+                        //create authentication token (authentciation object)
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        //converts the raw java class of the httprequest into an internal spring class (webauthenticationdetailsource)
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        //add the authentication to securitycontext
+                        SecurityContextHolder.getContext().setAuthentication(authToken); //this
+                    }
                 }
             }
+        } catch (Exception e) { //can remove this
+            System.out.println("CANNOT AUTHENTICATE USER WITH ERROR " + e.getMessage());
         }
-            filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
     private String parseJwtFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader(AUTHORIZATION);
-        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
         return null;

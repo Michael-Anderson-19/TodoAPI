@@ -1,4 +1,4 @@
-package io.github.MichaelAnderson19.TodoAPI.dto.auth;
+package io.github.MichaelAnderson19.TodoAPI.dto.auth.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

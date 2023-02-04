@@ -1,8 +1,9 @@
-package io.github.MichaelAnderson19.TodoAPI.dto.auth;
+package io.github.MichaelAnderson19.TodoAPI.dto.auth.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,16 +13,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UpdateUserRequestDto {
+public class PasswordChangeRequestDto {
 
     @NotEmpty(message="Email must not be empty")
     @Email(message = "Email must be valid")
     private String email;
 
-    @NotEmpty(message="Username must not be empty")
-    private String username;
+    @NotEmpty(message = "Old password must not be empty")
+    private String oldPassword;
 
-    @NotEmpty(message = "Password must not be empty")
-    private String password;
+    @NotEmpty(message = "New Password must not be empty")
+    @Size(min=8, message="New password must be a minimum of 8 characters")
+    private String newPassword;
 
 }

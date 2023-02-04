@@ -21,7 +21,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return mapSingleRole(user.getRoles());
+        return mapSingleRole(user.getRole().toString());
 //        return Arrays.stream(
 //                user.getRoles()
 //                .split(","))
@@ -30,7 +30,6 @@ public class SecurityUser implements UserDetails {
     }
 
     private Collection<? extends GrantedAuthority> mapSingleRole(String role) {
-        role = "ROLE_USER";
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }
 

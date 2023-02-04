@@ -1,9 +1,9 @@
 package io.github.MichaelAnderson19.TodoAPI.controller;
 
-import io.github.MichaelAnderson19.TodoAPI.dto.UserDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
-import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.response.UserDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.LoginRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.JwtResponse;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import jakarta.validation.Valid;
@@ -22,12 +22,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> loginUser(@Valid @RequestBody LoginRequestDto loginRequest) {
+    public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginRequestDto loginRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> createNewUser(@Valid @RequestBody RegistrationRequestDto registrationDto){
+    public ResponseEntity<UserDto> createNewUser(@Valid @RequestBody RegistrationRequestDto registrationDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 userService.createUser(registrationDto));
     }
