@@ -1,10 +1,10 @@
-package io.github.MichaelAnderson19.TodoAPI.service.security;
+package io.github.MichaelAnderson19.TodoAPI.service.security.impl;
 
 import io.github.MichaelAnderson19.TodoAPI.configuration.security.JwtUtils;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
 import io.github.MichaelAnderson19.TodoAPI.model.security.SecurityUser;
-import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthService;
+import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

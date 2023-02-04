@@ -1,15 +1,11 @@
 package io.github.MichaelAnderson19.TodoAPI.configuration.security;
 
-import io.github.MichaelAnderson19.TodoAPI.service.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 //import org.apache.tomcat.util.http.parser.Authorization;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +16,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.security.Security;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -48,7 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (jwtUtils.validateTokenCredentials(jwtToken, userDetails)) {
                     //create authentication token (authentciation object)
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    //builds details from request ???
+                    //converts the raw java class of the httprequest into an internal split class (webauthenticationdetailsource)
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     //add the authentication to securitycontext
                     SecurityContextHolder.getContext().setAuthentication(authToken); //this

@@ -5,7 +5,7 @@ import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.RegistrationRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
-import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthService;
+import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -3,17 +3,11 @@ package io.github.MichaelAnderson19.TodoAPI.controller;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.*;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import io.github.MichaelAnderson19.TodoAPI.dto.UserDto;
-import io.github.MichaelAnderson19.TodoAPI.exception.InvalidCredentialsException;
-import io.github.MichaelAnderson19.TodoAPI.exception.UserAlreadyExistsException;
-import io.github.MichaelAnderson19.TodoAPI.exception.UserNotFoundException;
-import io.github.MichaelAnderson19.TodoAPI.model.User;
-import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
-import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthService;
+import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import static io.github.MichaelAnderson19.TodoAPI.dto.auth.LoginResponseDto.*;

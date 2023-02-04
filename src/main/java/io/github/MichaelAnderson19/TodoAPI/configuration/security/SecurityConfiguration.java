@@ -1,6 +1,6 @@
 package io.github.MichaelAnderson19.TodoAPI.configuration.security;
 
-import io.github.MichaelAnderson19.TodoAPI.service.security.UserDetailsServiceImpl;
+import io.github.MichaelAnderson19.TodoAPI.service.security.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,8 +51,8 @@ public class SecurityConfiguration {
                 .and()
                 .authenticationProvider(authenticationProvider(userDetailsService))
                 .authorizeHttpRequests()
-                .requestMatchers("/api/**")
-                .authenticated()
+//                .requestMatchers("/api/**")
+//                .authenticated()
                 .requestMatchers("/auth/**")
                 .permitAll()
                 .anyRequest()

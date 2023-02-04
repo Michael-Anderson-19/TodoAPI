@@ -1,7 +1,8 @@
 package io.github.MichaelAnderson19.TodoAPI.service.security;
 
 import io.github.MichaelAnderson19.TodoAPI.configuration.security.JwtUtils;
-import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthService;
+import io.github.MichaelAnderson19.TodoAPI.service.security.impl.AuthServiceImpl;
+import io.github.MichaelAnderson19.TodoAPI.service.security.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.security.authentication.AuthenticationManager;
 

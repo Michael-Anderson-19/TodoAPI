@@ -1,4 +1,4 @@
-package io.github.MichaelAnderson19.TodoAPI.service.security;
+package io.github.MichaelAnderson19.TodoAPI.service.security.impl;
 
 import io.github.MichaelAnderson19.TodoAPI.model.security.SecurityUser;
 import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
