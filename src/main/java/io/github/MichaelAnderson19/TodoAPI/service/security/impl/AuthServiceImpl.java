@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    //    private final UserDetailsServiceImpl userDetailsService;
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -35,15 +34,14 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
         String jwtToken = jwtUtils.generateJwt(userDetails);
-//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
+        refreshTokenService.deleteIfExists(userDetails.getUsername());
         String refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
-//        refreshToken.getToken();
         return JwtResponse
                 .builder()
                 .userEmail(userDetails.getUsername())
                 .jwtToken(jwtToken)
                 .refreshToken(refreshToken)
-                .role(userDetails.getAuthorities().toString()) //check
+                .role(userDetails.getRoleString())
                 .build();
     }
 
@@ -66,9 +64,15 @@ public class AuthServiceImpl implements AuthService {
         return authentication;
     }
 
+    public void logoutUser() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!userEmail.equals("anonymousUser"))
+            refreshTokenService.deleteIfExists(userEmail);
+    }
 
     private void setSecurityContextHolder(Authentication authentication) {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
 
 }

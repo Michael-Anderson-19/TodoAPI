@@ -7,12 +7,14 @@ import io.github.MichaelAnderson19.TodoAPI.repository.RefreshTokenRepository;
 import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
 import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import io.github.MichaelAnderson19.TodoAPI.service.security.RefreshTokenService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -56,6 +58,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     public void deleteToken(String email) {
         refreshTokenRepository.deleteByUserEmail(email);
+    }
+
+    //@Scope(proxyMode = ScopedProxyMode.INTERFACES) to the DAO
+//    @Transactional
+    public void deleteIfExists(String email) {
+        refreshTokenRepository.findByUserEmail(email).ifPresent(refreshTokenRepository::delete);
     }
 
 }

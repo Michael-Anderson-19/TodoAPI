@@ -13,15 +13,15 @@ public class AuthServiceTest {
 
     private JwtUtils jwtUtils;
     private AuthenticationManager authenticationManager;
-    private UserDetailsServiceImpl userDetailsService;
+    private RefreshTokenService refreshTokenService;
     private AuthService authService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         jwtUtils = mock(JwtUtils.class);
         authenticationManager = mock(AuthenticationManager.class);
-        userDetailsService = mock(UserDetailsServiceImpl.class);
-        authService = new AuthServiceImpl(userDetailsService,authenticationManager,jwtUtils);
+        refreshTokenService = mock(RefreshTokenService.class);
+        authService = new AuthServiceImpl(refreshTokenService, authenticationManager, jwtUtils);
     }
 
     //login happy path

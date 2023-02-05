@@ -26,8 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginRequestDto loginRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest)); //ad creation of the refresh token in the auth service
-        //evcerything should really come through this and the auth service since this is the auth controller - the service calls other services not hte controller
+        return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
@@ -43,5 +42,10 @@ public class AuthController {
         );
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity logoutUser() {
+        authService.logoutUser();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

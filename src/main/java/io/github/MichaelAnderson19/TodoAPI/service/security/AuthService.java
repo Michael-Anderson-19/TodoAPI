@@ -8,5 +8,7 @@ import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.TokenRefreshRespons
 public interface AuthService {
     JwtResponse login(LoginRequestDto loginRequest);
 
+    void logoutUser();
+
     TokenRefreshResponse refreshJwtToken(RefreshTokenRequest refreshRequest);
 }
