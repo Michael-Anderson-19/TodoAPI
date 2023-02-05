@@ -2,6 +2,7 @@ package io.github.MichaelAnderson19.TodoAPI.controller;
 
 import io.github.MichaelAnderson19.TodoAPI.dto.response.TodoItemDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.request.TodoItemRequestDto;
+import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
 import io.github.MichaelAnderson19.TodoAPI.service.impl.TodoItemServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class TodoItemController {
      * TODO add exception handling
      * TODO define return response for errors including missing request parameters etc
      */
-    private final TodoItemServiceImpl todoItemService;
+    private final TodoItemService todoItemService;
 
     @GetMapping("/{itemId}")
 //    @PreAuthorize("hasRole('user')")
@@ -34,7 +35,7 @@ public class TodoItemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    //    @PreAuthorize("isAuthenticated()")
     @GetMapping({"", "/"})
     public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(
