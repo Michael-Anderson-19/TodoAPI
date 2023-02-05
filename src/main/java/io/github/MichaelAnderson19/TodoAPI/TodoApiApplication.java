@@ -1,7 +1,7 @@
 package io.github.MichaelAnderson19.TodoAPI;
 
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.service.UserService;
+import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +17,7 @@ public class TodoApiApplication {
     }
 
     @Bean
-    CommandLineRunner init(UserService userService) {
+    CommandLineRunner init(UserServiceImpl userService) {
         return args -> {
             try {
                 userService.createUser(new RegistrationRequestDto("michael@test.com", "password", "michael", "USER"));

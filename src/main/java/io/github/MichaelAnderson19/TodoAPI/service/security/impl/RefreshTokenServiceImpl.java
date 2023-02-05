@@ -4,17 +4,13 @@ import io.github.MichaelAnderson19.TodoAPI.exception.InvalidTokenException;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.model.security.RefreshToken;
 import io.github.MichaelAnderson19.TodoAPI.repository.RefreshTokenRepository;
-import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
-import io.github.MichaelAnderson19.TodoAPI.service.UserService;
+import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
 import io.github.MichaelAnderson19.TodoAPI.service.security.RefreshTokenService;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,7 +21,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private Long refreshTokenExpirationSeconds;
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @Override
     public RefreshToken findByToken(String token) {

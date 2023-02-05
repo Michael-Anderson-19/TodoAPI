@@ -2,7 +2,7 @@ package io.github.MichaelAnderson19.TodoAPI.controller;
 
 import io.github.MichaelAnderson19.TodoAPI.dto.response.TodoItemDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.request.TodoItemRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
+import io.github.MichaelAnderson19.TodoAPI.service.impl.TodoItemServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class TodoItemController {
      * TODO add exception handling
      * TODO define return response for errors including missing request parameters etc
      */
-    private final TodoItemService todoItemService;
+    private final TodoItemServiceImpl todoItemService;
 
     @GetMapping("/{itemId}")
 //    @PreAuthorize("hasRole('user')")

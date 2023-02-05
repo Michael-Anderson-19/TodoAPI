@@ -6,11 +6,10 @@ import io.github.MichaelAnderson19.TodoAPI.dto.response.UserDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.LoginRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.JwtResponse;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
-import io.github.MichaelAnderson19.TodoAPI.service.UserService;
+import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
 import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginRequestDto loginRequest) {

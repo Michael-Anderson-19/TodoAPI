@@ -10,13 +10,18 @@ import io.github.MichaelAnderson19.TodoAPI.exception.UserAlreadyExistsException;
 import io.github.MichaelAnderson19.TodoAPI.exception.UserNotFoundException;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.repository.UserRepository;
+import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
+import io.github.MichaelAnderson19.TodoAPI.shared.UserRole;
 import org.junit.jupiter.api.BeforeEach;
+
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import static org.assertj.core.api.Assertions.*;
+
 import java.util.Optional;
 
 public class UserServiceTest {
@@ -24,22 +29,22 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         passwordEncoder = mock(PasswordEncoder.class);
         userRepository = mock(UserRepository.class);
-        userService = new UserService(userRepository,passwordEncoder);
+        userService = new UserServiceImpl(userRepository, passwordEncoder);
     }
 
     @Test
     @DisplayName("When creating a new user, that does not already exist within the database, return a UserDto")
-    public void happyPathCreateUserTest(){
+    public void happyPathCreateUserTest() {
         String encodedPassword = "ENCODED_PASSWORD_12345";
-        RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test","USER");
-        User user = User.builder().id(null).email(dto.getEmail()).password(encodedPassword).username(dto.getUsername()).roles(dto.getRoles()).build();
-        User savedUser = User.builder().id(1l).email(dto.getEmail()).password(encodedPassword).username(dto.getUsername()).roles(dto.getRoles()).build();
+        RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test", "USER");
+        User user = User.builder().id(null).email(dto.getEmail()).password(encodedPassword).username(dto.getUsername()).role(UserRole.USER).build();
+        User savedUser = User.builder().id(1l).email(dto.getEmail()).password(encodedPassword).username(dto.getUsername()).role(UserRole.USER).build();
         when(passwordEncoder.encode(dto.getPassword())).thenReturn(encodedPassword);
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.<User>empty());
         when(userRepository.save(user)).thenReturn(savedUser);
@@ -50,26 +55,27 @@ public class UserServiceTest {
         assertThat(result.getEmail()).isEqualTo(savedUser.getEmail());
         assertThat(result.getUsername()).isEqualTo(savedUser.getUsername());
 
-        verify(passwordEncoder,times(1)).encode(dto.getPassword());
-        verify(userRepository,times(1)).findByEmail(dto.getEmail());
-        verify(userRepository,times(1)).save(user);
+        verify(passwordEncoder, times(1)).encode(dto.getPassword());
+        verify(userRepository, times(1)).findByEmail(dto.getEmail());
+        verify(userRepository, times(1)).save(user);
 
     }
 
     @Test
     @DisplayName("When creating a new user, that already exist within the database, return that new user")
-    public void unhappyPathCreateUserTest(){
-        RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test","USER");
-        User user = User.builder().id(null).email(dto.getEmail()).password(dto.getPassword()).username(dto.getUsername()).roles(dto.getRoles()).build();
+    public void unhappyPathCreateUserTest() {
+        RegistrationRequestDto dto = new RegistrationRequestDto("test@test.com", "password", "test", "USER");
+        User user = User.builder().id(null).email(dto.getEmail()).password(dto.getPassword()).username(dto.getUsername()).role(UserRole.USER).build();
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(user));
 
-        assertThatThrownBy( ()-> userService.createUser(dto) )
+        assertThatThrownBy(() -> userService.createUser(dto))
                 .isInstanceOf(UserAlreadyExistsException.class)
                 .hasMessageContaining(dto.getEmail());
 
-        verify(userRepository,times(1)).findByEmail(dto.getEmail());
+        verify(userRepository, times(1)).findByEmail(dto.getEmail());
 
     }
+
     ///changePassword
     @Test
     @DisplayName("When changing a user password with an existing user and correct password and email return that user with an new password")
@@ -82,20 +88,21 @@ public class UserServiceTest {
                 .builder().email(principalEmail).oldPassword(oldPassword).newPassword(newPassword).build();
 
         User user = User.builder().id(1L).email(principalEmail).username("test")
-                .password(oldPassword).roles("USER").build();
+                .password(oldPassword).role(UserRole.USER).build();
 
         when(userRepository.findByEmail(principalEmail)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(passwordChangeDto.getOldPassword(),user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(passwordChangeDto.getOldPassword(), user.getPassword())).thenReturn(true);
         when(passwordEncoder.encode(passwordChangeDto.getNewPassword())).thenReturn(newPassword);
         when(userRepository.save(user)).thenReturn(user);
 
-        User result =  userService.changePassword(principalEmail,passwordChangeDto);
+        User result = userService.changePassword(principalEmail, passwordChangeDto);
         assertThat(result.getPassword()).isEqualTo(newPassword);
 
-        verify(passwordEncoder,times(1)).encode(passwordChangeDto.getNewPassword());
-        verify(passwordEncoder,times(1)).matches(passwordChangeDto.getOldPassword(),oldPassword);
-        verify(userRepository,times(1)).save(user);
+        verify(passwordEncoder, times(1)).encode(passwordChangeDto.getNewPassword());
+        verify(passwordEncoder, times(1)).matches(passwordChangeDto.getOldPassword(), oldPassword);
+        verify(userRepository, times(1)).save(user);
     }
+
     @Test
     @DisplayName("When changing a user password with emails that do not match then throw an InvalidCredentialsException")
     public void unhappyPathChangePassword_EmailsDontMatch() {
@@ -106,10 +113,11 @@ public class UserServiceTest {
                 .newPassword("newPassword")
                 .build();
 
-        assertThatThrownBy( () -> userService.changePassword(principalEmail,dto))
+        assertThatThrownBy(() -> userService.changePassword(principalEmail, dto))
                 .isInstanceOf(InvalidCredentialsException.class)
                 .hasMessageContaining("email does not match");
     }
+
     @Test
     @DisplayName("When changing a user password a user that does not exist in the database then throw a UserNotFoundException")
     public void unhappyPathChangePassword_UserNotFound() {
@@ -123,18 +131,19 @@ public class UserServiceTest {
 
         when(userRepository.findByEmail(principalEmail)).thenReturn(Optional.<User>empty());
 
-        assertThatThrownBy( () -> userService.changePassword(principalEmail,dto))
+        assertThatThrownBy(() -> userService.changePassword(principalEmail, dto))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(principalEmail);
-        verify(userRepository,times(1)).findByEmail(principalEmail);
+        verify(userRepository, times(1)).findByEmail(principalEmail);
     }
+
     @Test
     @DisplayName("When changing a user password with passwords that do not match then throw an InvalidCredentialsException")
     public void unhappyPathChangePassword_PasswordsDontMatch() {
         String principalEmail = "test@test.com";
 
         User user = User.builder().id(1L).email(principalEmail).username("test")
-                .password("differentPassword").roles("USER").build();
+                .password("differentPassword").role(UserRole.USER).build();
 
         PasswordChangeRequestDto dto = PasswordChangeRequestDto.builder()
                 .email(principalEmail)
@@ -143,32 +152,32 @@ public class UserServiceTest {
                 .build();
 
         when(userRepository.findByEmail(principalEmail)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(dto.getOldPassword(),user.getPassword())).thenReturn(false);
+        when(passwordEncoder.matches(dto.getOldPassword(), user.getPassword())).thenReturn(false);
 
-        assertThatThrownBy( () -> userService.changePassword(principalEmail,dto))
+        assertThatThrownBy(() -> userService.changePassword(principalEmail, dto))
                 .isInstanceOf(InvalidCredentialsException.class)
                 .hasMessageContaining("password does not match");
-        verify(userRepository,times(1)).findByEmail(principalEmail);
-        verify(passwordEncoder, times(1)).matches(dto.getOldPassword(),user.getPassword());
+        verify(userRepository, times(1)).findByEmail(principalEmail);
+        verify(passwordEncoder, times(1)).matches(dto.getOldPassword(), user.getPassword());
     }
 
-//    delete user
+    //    delete user
     @Test
     @DisplayName("When deleting a user that exists in the database by their email then delete that user")
     public void happyPathDeleteUser() {
         String email = "test@test.com";
         String password = "password";
         DeleteUserRequestDto dto = DeleteUserRequestDto.builder().email(email).password(password).build();
-        User user = User.builder().id(1L).email(email).password(password).username("test").roles("USER").build();
+        User user = User.builder().id(1L).email(email).password(password).username("test").role(UserRole.USER).build();
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(true);
 
         userService.deleteUser(email, dto);
 
-        verify(userRepository,times(1)).findByEmail(email);
-        verify(passwordEncoder,times(1)).matches(password,password);
-        verify(userRepository,times(1)).delete(user);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(password, password);
+        verify(userRepository, times(1)).delete(user);
     }
 
     @Test
@@ -180,10 +189,10 @@ public class UserServiceTest {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.<User>empty());
 
-        assertThatThrownBy(()-> userService.deleteUser(email, dto)).isInstanceOf(UserNotFoundException.class)
-                        .hasMessageContaining(email);
+        assertThatThrownBy(() -> userService.deleteUser(email, dto)).isInstanceOf(UserNotFoundException.class)
+                .hasMessageContaining(email);
 
-        verify(userRepository,times(1)).findByEmail(email);
+        verify(userRepository, times(1)).findByEmail(email);
     }
 
     @Test
@@ -194,7 +203,7 @@ public class UserServiceTest {
         String password = "password";
         DeleteUserRequestDto dto = DeleteUserRequestDto.builder().email(otherEmail).password(password).build();
 
-        assertThatThrownBy(()-> userService.deleteUser(email, dto)).isInstanceOf(InvalidCredentialsException.class)
+        assertThatThrownBy(() -> userService.deleteUser(email, dto)).isInstanceOf(InvalidCredentialsException.class)
                 .hasMessageContaining("email");
     }
 
@@ -205,47 +214,47 @@ public class UserServiceTest {
         String password = "password";
         String password2 = "otherPassword";
         DeleteUserRequestDto dto = DeleteUserRequestDto.builder().email(email).password(password).build();
-        User user = User.builder().id(1L).email(email).password(password2).username("test").roles("USER").build();
+        User user = User.builder().id(1L).email(email).password(password2).username("test").role(UserRole.USER).build();
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(false);
+        when(passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(false);
 
-        assertThatThrownBy( ()-> userService.deleteUser(email, dto))
+        assertThatThrownBy(() -> userService.deleteUser(email, dto))
                 .isInstanceOf(InvalidCredentialsException.class)
-                        .hasMessageContaining("password");
+                .hasMessageContaining("password");
 
-        verify(userRepository,times(1)).findByEmail(email);
-        verify(passwordEncoder,times(1)).matches(password,password2);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(password, password2);
     }
 
-//    update user
+    //    update user
     @Test
     @DisplayName("When updating a user that exists in the database then return a UserDto")
-    public void happyPathUpdateUser(){
+    public void happyPathUpdateUser() {
         String email = "test@test.com";
         String password = "password";
         String username = "username";
         String newUsername = "newUsername";
 
         UpdateUserRequestDto dto = UpdateUserRequestDto.builder().email(email).password(password).username(newUsername).build();
-        User user = User.builder().id(1L).email(email).password(password).username(username).roles("USER").build();
+        User user = User.builder().id(1L).email(email).password(password).username(username).role(UserRole.USER).build();
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(true);
         when(userRepository.save(user)).thenReturn(user);
 
         UserDto result = userService.updateUserDetails(email, dto);
         assertThat(result.getUsername()).isEqualTo(dto.getUsername());
         assertThat(result.getEmail()).isEqualTo(dto.getEmail());
 
-        verify(userRepository,times(1)).findByEmail(email);
-        verify(passwordEncoder,times(1)).matches(password,password);
-        verify(userRepository,times(1)).save(user);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(password, password);
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
     @DisplayName("When updating a user that does not exist in the database then throw a UserNotFoundException")
-    public void unhappyPathUpdateUser_userDoesNotExist(){
+    public void unhappyPathUpdateUser_userDoesNotExist() {
         String email = "test@test.com";
         String password = "password";
 
@@ -253,30 +262,31 @@ public class UserServiceTest {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.<User>empty());
 
-        assertThatThrownBy(()-> userService.updateUserDetails(email, dto)).isInstanceOf(UserNotFoundException.class)
+        assertThatThrownBy(() -> userService.updateUserDetails(email, dto)).isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(email);
 
-        verify(userRepository,times(1)).findByEmail(email);
+        verify(userRepository, times(1)).findByEmail(email);
     }
+
     @Test
     @DisplayName("When updating a user that exists in the database with the wrong password then throw a InvalidCredentialsException")
-    public void unhappyPathUpdateUser_incorrectPassword(){
+    public void unhappyPathUpdateUser_incorrectPassword() {
         String email = "test@test.com";
         String password = "password";
         String password2 = "otherPassword";
 
         UpdateUserRequestDto dto = UpdateUserRequestDto.builder().email(email).password(password).username("test").build();
-        User user = User.builder().id(1L).email(email).password(password2).username("test").roles("USER").build();
+        User user = User.builder().id(1L).email(email).password(password2).username("test").role(UserRole.USER).build();
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(dto.getPassword(),user.getPassword())).thenReturn(false);
+        when(passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(false);
 
-        assertThatThrownBy( ()-> userService.updateUserDetails(email, dto))
+        assertThatThrownBy(() -> userService.updateUserDetails(email, dto))
                 .isInstanceOf(InvalidCredentialsException.class)
                 .hasMessageContaining("password");
 
-        verify(userRepository,times(1)).findByEmail(email);
-        verify(passwordEncoder,times(1)).matches(password,password2);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(password, password2);
     }
 
     //GET USER TEST - REFACTOR TO USE @Nest
@@ -298,43 +308,43 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("When getting a user that does not exist in the database by a given email then throw a UserNotFoundException")
-    public void unhappyPathGetUser(){
+    public void unhappyPathGetUser() {
         String principalEmail = "testemail@test.com";
 
         when(userRepository.findByEmail(principalEmail)).thenReturn(Optional.<User>empty());
 
-        assertThatThrownBy(()-> userService.getUser(principalEmail))
+        assertThatThrownBy(() -> userService.getUser(principalEmail))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(principalEmail);
-        verify(userRepository,times(1)).findByEmail(principalEmail);
+        verify(userRepository, times(1)).findByEmail(principalEmail);
     }
 
 
     //----------------------------------------------------------------
     //verifyPassword
-   // @Test shouldn't test private methods
+    // @Test shouldn't test private methods
     @DisplayName("when calling verifyPassword on a password and a password hash that match then return true")
-    public void happyPathVerifyPassword(){
+    public void happyPathVerifyPassword() {
 
         String rawPassword = "password";
         String encodedPassword = "$2a$10$V.7w2RA0RdNLtaEoRsB38eKlhBOsszrEWh9dGpkzwqGTTJRvJgjzO";
 
-        when(passwordEncoder.matches(rawPassword,encodedPassword)).thenReturn(true);
-       // userService.
+        when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(true);
+        // userService.
         //assertThat()
     }
 
     //@Test
     @DisplayName("when calling verifyPassword on a password and a password hash that do not match then return false")
-    public void unhappyPathVerifyPassword(){
+    public void unhappyPathVerifyPassword() {
         String principalEmail = "testemail@test.com";
 
         when(userRepository.findByEmail(principalEmail)).thenReturn(Optional.<User>empty());
 
-        assertThatThrownBy(()-> userService.getUser(principalEmail))
+        assertThatThrownBy(() -> userService.getUser(principalEmail))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(principalEmail);
-        verify(userRepository,times(1)).findByEmail(principalEmail);
+        verify(userRepository, times(1)).findByEmail(principalEmail);
     }
 
 
