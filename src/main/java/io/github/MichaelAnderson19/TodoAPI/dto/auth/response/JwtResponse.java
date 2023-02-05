@@ -12,7 +12,12 @@ import lombok.NoArgsConstructor;
 public class JwtResponse {
 
     private String userEmail;
+
     private String jwtToken;
+
+    private String refreshToken;
+
     private String role;
+    //add in the response token
 
 }

@@ -32,11 +32,13 @@ public class JwtUtils {
     }
 
     public String generateJwt(UserDetails userDetails) {
+        return generateTokenFromEmail(userDetails.getUsername());
+    }
 
+    public String generateTokenFromEmail(String email) {
         final Instant now = Instant.now();
-
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(email)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusSeconds(jwtExpirationSec)))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

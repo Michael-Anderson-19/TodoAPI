@@ -28,12 +28,13 @@ public class TodoItemController {
     private final TodoItemService todoItemService;
 
     @GetMapping("/{itemId}")
-    @PreAuthorize("hasRole('user')")
+//    @PreAuthorize("hasRole('user')")
     public ResponseEntity<TodoItemDto> getTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
         TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(), itemId);
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"", "/"})
     public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(

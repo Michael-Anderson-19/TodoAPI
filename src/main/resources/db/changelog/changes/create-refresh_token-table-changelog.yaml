@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: todoItemCreation
+      id: refreshTokenCreation
       author: Michael Anderson
       changes:
         - createTable:
-            tableName: todo_items
+            tableName: refresh_token
             columns:
               - column:
                   name: id
@@ -13,30 +13,23 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-                    primaryKeyName: PK_TODO_ITEMS
-              - column:
-                  name: content
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: complete
-                  type: BIT
-                  constraints:
-                    nullable: false
+                    primaryKeyName: PK_REFRESH_TOKEN
               - column:
                   name: user_id
                   type: BIGINT
                   constraints:
                     referencedTableName: users
                     referencedColumnNames: id
-                    foreignKeyName: FK_TODO_ITEMS_USERS
+                    foreignKeyName: FK_REFRESH_TOKEN_USERS
                     nullable: false
               - column:
-                  name: priority
-                  type: varchar(60)
+                  name: token
+                  type: varchar(255)
                   constraints:
                     nullable: false
+              - column:
+                  name: expiry_date
+                  type: datetime
               - column:
                   name: created_at
                   type: datetime
