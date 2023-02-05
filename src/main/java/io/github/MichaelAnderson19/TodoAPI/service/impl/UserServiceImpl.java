@@ -31,8 +31,6 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException(String.format("Exception: An account with the email address %s already exists", registrationDto.getEmail()));
         }
 
-        //check for user with username if does thrwo exception
-
         User user = userRepository.save(
                 User.builder()
                         .email(registrationDto.getEmail())
@@ -108,7 +106,6 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder().email(user.getEmail()).username(user.getUsername()).build();
     }
 
-    //TODO refactor rest of code to use this once learnt how to spy in mockito
     private boolean verifyPassword(String rawPassword, String encodedPassword) {
         return encoder.matches(rawPassword, encodedPassword);
     }

@@ -31,27 +31,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        try { //can remove this
+        try {
             final String jwtToken = parseJwtFromRequest(request);
             if (jwtToken != null && jwtUtils.validateToken(jwtToken)) {
                 final String userEmail = jwtUtils.extractEmail(jwtToken);
-                //if email is set and the securitycontext is empty (no one currently logged in)
                 if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    //then get the user details from the database
                     UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-                    //validate the token against the expiration date and the email inside of the request vs database
-                    if (jwtUtils.validateTokenCredentials(jwtToken, userDetails)) {  /////////dis jsut me
-                        //create authentication token (authentciation object)
+                    if (jwtUtils.validateTokenCredentials(jwtToken, userDetails)) {
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
-                        //converts the raw java class of the httprequest into an internal spring class (webauthenticationdetailsource)
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        //add the authentication to securitycontext
                         SecurityContextHolder.getContext().setAuthentication(authToken); //this
                     }
                 }
             }
-        } catch (Exception e) { //can remove this
+        } catch (Exception e) {
             System.out.println("CANNOT AUTHENTICATE USER WITH ERROR " + e.getMessage());
         }
         filterChain.doFilter(request, response);

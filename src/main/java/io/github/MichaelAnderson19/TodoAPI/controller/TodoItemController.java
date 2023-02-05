@@ -21,21 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class TodoItemController {
-    /**
-     * TODO testing for this and service
-     * TODO add exception handling
-     * TODO define return response for errors including missing request parameters etc
-     */
+
     private final TodoItemService todoItemService;
 
     @GetMapping("/{itemId}")
-//    @PreAuthorize("hasRole('user')")
     public ResponseEntity<TodoItemDto> getTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
         TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(), itemId);
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
-    //    @PreAuthorize("isAuthenticated()")
     @GetMapping({"", "/"})
     public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -46,7 +40,6 @@ public class TodoItemController {
     @PostMapping({"", "/"})
     public ResponseEntity<TodoItemDto> createTodoItem(Principal principal, @Valid @RequestBody TodoItemRequestDto todoItemRequestDto) {
         TodoItemDto itemDto = todoItemService.addNewTodoItem(principal.getName(), todoItemRequestDto);
-        //create uri to created item
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(itemDto.getId().toString()).toUriString());
 
         return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(itemDto);

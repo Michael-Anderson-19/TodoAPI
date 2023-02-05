@@ -18,6 +18,5 @@ public class JwtResponse {
     private String refreshToken;
 
     private String role;
-    //add in the response token
 
 }

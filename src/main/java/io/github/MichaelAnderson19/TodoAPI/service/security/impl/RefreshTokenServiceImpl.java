@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
-    @Value("${app.refreshExpirationSec}") //@Value("${app.jwtSecret}")
+    @Value("${app.refreshExpirationSec}")
     private Long refreshTokenExpirationSeconds;
 
     private final RefreshTokenRepository refreshTokenRepository;
@@ -25,13 +25,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken findByToken(String token) {
-        //could get user and return this if needed?
         return refreshTokenRepository.findByToken(token).orElseThrow(() -> new InvalidTokenException("Refresh token bot found"));
     }
 
     @Override
     public String createRefreshToken(String userEmail) {
-        //public RefreshToken createRefreshToken(String userEmail) {
 
         User user = userService.getUser(userEmail);
         RefreshToken refreshToken = refreshTokenRepository.save(RefreshToken.builder()
@@ -48,7 +46,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             refreshTokenRepository.delete(token);
             throw new InvalidTokenException("Refresh token has expired");
         }
-        return token; //return true?;
+        return token;
     }
 
     @Override
@@ -56,8 +54,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         refreshTokenRepository.deleteByUserEmail(email);
     }
 
-    //@Scope(proxyMode = ScopedProxyMode.INTERFACES) to the DAO
-//    @Transactional
     public void deleteIfExists(String email) {
         refreshTokenRepository.findByUserEmail(email).ifPresent(refreshTokenRepository::delete);
     }

@@ -11,16 +11,13 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    /*
-    fired any time a user tries to access a secured endpoint and an authenticationException is thrown
-     */
+
     @Override
     public void commence(
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
 
-//        response.addHeader("access denied reason", "authentication required");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
     }
 }

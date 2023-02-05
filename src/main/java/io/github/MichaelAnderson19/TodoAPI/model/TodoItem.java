@@ -12,21 +12,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="todo_items")
-public class TodoItem extends BaseEntity{
+@Table(name = "todo_items")
+public class TodoItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
-    @Column(name="content")
+    @Column(name = "content")
     private String content;
     @Enumerated(EnumType.STRING)
-    @Column(name="priority")
+    @Column(name = "priority")
     private ItemPriority priority;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name="user_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    @Column(name="complete")
+    @Column(name = "complete")
     private boolean complete;
 }

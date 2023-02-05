@@ -53,14 +53,13 @@ public class SecurityConfiguration {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                //.authenticationProvider(authenticationProvider(userDetailsService)) //is this needed??
                 .authorizeHttpRequests()
-//                .requestMatchers("/api/**")
-//                .authenticated()
                 .requestMatchers("/auth/**")
                 .permitAll()
+                //.requestMatchers("/api/**")
+                //.authenticated()
                 .anyRequest()
-                .permitAll();
+                .authenticated();
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

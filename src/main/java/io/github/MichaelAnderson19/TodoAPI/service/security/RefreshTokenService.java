@@ -8,7 +8,6 @@ public interface RefreshTokenService {
 
 
     String createRefreshToken(String userEmail);
-//    RefreshToken createRefreshToken(String userEmail);
 
     RefreshToken verifyRefreshTokenExpirationDate(RefreshToken token);
 
