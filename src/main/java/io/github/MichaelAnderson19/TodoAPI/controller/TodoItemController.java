@@ -42,7 +42,6 @@ public class TodoItemController {
         );
     }
 
-    //https://www.bezkoder.com/spring-boot-jwt-authentication/
     @PostMapping({"", "/"})
     public ResponseEntity<TodoItemDto> createTodoItem(Principal principal, @Valid @RequestBody TodoItemRequestDto todoItemRequestDto) {
         TodoItemDto itemDto = todoItemService.addNewTodoItem(principal.getName(), todoItemRequestDto);
