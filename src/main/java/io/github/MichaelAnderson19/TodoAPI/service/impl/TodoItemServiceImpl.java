@@ -7,7 +7,6 @@ import io.github.MichaelAnderson19.TodoAPI.model.TodoItem;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.repository.TodoItemRepository;
 import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
-import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
 import io.github.MichaelAnderson19.TodoAPI.shared.ItemPriority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,12 +53,41 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public List<TodoItemDto> getAllUsersTodoItems(String email) {
-        return todoItemRepository.findAllByUserEmail(email)
-                .stream()
-                .map(TodoItemDto::mapToDto)
-                .collect(Collectors.toList());
+    public List<TodoItemDto> getAllUsersTodoItems(String email, ItemPriority priority) {
+
+        List<TodoItem> items;
+
+        Boolean complete = null;
+
+        if (priority != null && complete == null) {
+            items = getAllUserItemsByPriority(email, priority);
+        } else if (priority == null && complete != null) {
+            items = getAllUserItemsByComplete(email, complete);
+        } else if (priority != null && complete != null) {
+            items = getAllUserItemsByPriorityAndComplete(email, priority, complete);
+        } else {
+            items = todoItemRepository.findAllByUserEmail(email);
+        }
+        return items.stream().map(TodoItemDto::mapToDto).collect(Collectors.toList()); //use object mapper
+//        return todoItemRepository.findAllByUserEmail(email)
+//                .stream()
+//                .map(TodoItemDto::mapToDto)
+//                .collect(Collectors.toList());
     }
+
+
+    private List<TodoItem> getAllUserItemsByPriority(String email, ItemPriority priority) {
+        return todoItemRepository.findAllByUserEmailAndPriority(email, priority);
+    }
+
+    private List<TodoItem> getAllUserItemsByComplete(String email, boolean complete) {
+        return todoItemRepository.findAllByUserEmailAndComplete(email, complete);
+    }
+
+    private List<TodoItem> getAllUserItemsByPriorityAndComplete(String email, ItemPriority priority, boolean complete) {
+        return todoItemRepository.findAllByUserEmailAndPriorityAndComplete(email, priority, complete);
+    }
+
 
     //edit content and priority
     @Override

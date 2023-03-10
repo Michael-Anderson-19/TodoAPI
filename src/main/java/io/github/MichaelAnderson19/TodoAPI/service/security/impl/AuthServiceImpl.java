@@ -5,9 +5,12 @@ import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.LoginRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RefreshTokenRequest;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.JwtResponse;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.TokenRefreshResponse;
+import io.github.MichaelAnderson19.TodoAPI.dto.response.UserDto;
 import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.model.security.RefreshToken;
 import io.github.MichaelAnderson19.TodoAPI.model.security.SecurityUser;
+import io.github.MichaelAnderson19.TodoAPI.service.UserService;
+import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
 import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import io.github.MichaelAnderson19.TodoAPI.service.security.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
+
+    private final UserService userService;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -74,5 +79,13 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    @Override
+    public UserDto getCurrentUser() {
+        return userService.getUserDto(getCurrentUserEmail());
+    }
 
 }

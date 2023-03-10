@@ -29,15 +29,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> createNewUser(@Valid @RequestBody RegistrationRequestDto registrationDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                userService.createUser(registrationDto));
+    public ResponseEntity createNewUser(@Valid @RequestBody RegistrationRequestDto registrationDto) { //remove return, does not need that
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<TokenRefreshResponse> refreshUsersJWTToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 authService.refreshJwtToken(refreshTokenRequest)
+        );
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<UserDto> getCurrentLoggedInUser() {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                authService.getCurrentUser()
         );
     }
 

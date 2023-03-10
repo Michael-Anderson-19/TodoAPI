@@ -3,12 +3,11 @@ package io.github.MichaelAnderson19.TodoAPI.controller;
 import io.github.MichaelAnderson19.TodoAPI.dto.response.TodoItemDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.request.TodoItemRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.service.TodoItemService;
-import io.github.MichaelAnderson19.TodoAPI.service.impl.TodoItemServiceImpl;
+import io.github.MichaelAnderson19.TodoAPI.shared.ItemPriority;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,14 +25,19 @@ public class TodoItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<TodoItemDto> getTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
+        System.out.println("\n\n\n\n\n" +
+                "***********************\ncalling get item " + principal.getName() + " " + itemId);
         TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(), itemId);
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
     @GetMapping({"", "/"})
-    public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                todoItemService.getAllUsersTodoItems(principal.getName())
+    public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal, @RequestParam(name = "priority", required = false) ItemPriority priority) {
+
+        List<TodoItemDto> items = todoItemService.getAllUsersTodoItems(principal.getName(), priority);
+        HttpStatus status = HttpStatus.OK;
+        if (items.size() == 0) status = HttpStatus.NO_CONTENT;
+        return ResponseEntity.status(status).body(items
         );
     }
 

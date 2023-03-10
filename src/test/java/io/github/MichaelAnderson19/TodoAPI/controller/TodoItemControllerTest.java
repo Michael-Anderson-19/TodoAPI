@@ -2,8 +2,6 @@ package io.github.MichaelAnderson19.TodoAPI.controller;
 
 import io.github.MichaelAnderson19.TodoAPI.dto.request.TodoItemRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.response.TodoItemDto;
-import io.github.MichaelAnderson19.TodoAPI.model.TodoItem;
-import io.github.MichaelAnderson19.TodoAPI.repository.TodoItemRepository;
 import io.github.MichaelAnderson19.TodoAPI.service.impl.TodoItemServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,16 +60,16 @@ public class TodoItemControllerTest {
         itemDtoList.add(itemDto);
 
         when(principal.getName()).thenReturn(testEmail);
-        when(todoItemService.getAllUsersTodoItems(testEmail)).thenReturn(itemDtoList);
+        when(todoItemService.getAllUsersTodoItems(testEmail, null)).thenReturn(itemDtoList);
 
-        ResponseEntity<List<TodoItemDto>> result = todoItemController.getAllTodoItemsForUser(principal);
+        ResponseEntity<List<TodoItemDto>> result = todoItemController.getAllTodoItemsForUser(principal, null);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody()).isEqualTo(itemDtoList);
         assertThat(result.getBody().size()).isEqualTo(1);
 
         verify(principal, times(1)).getName();
-        verify(todoItemService, times(1)).getAllUsersTodoItems(testEmail);
+        verify(todoItemService, times(1)).getAllUsersTodoItems(testEmail, null);
     }
 
     //@Test //https://stackoverflow.com/questions/9419606/unit-testing-a-method-dependent-to-the-request-context
