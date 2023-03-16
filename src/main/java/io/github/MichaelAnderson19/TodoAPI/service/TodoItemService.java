@@ -14,7 +14,7 @@ public interface TodoItemService {
 
     TodoItemDto getTodoItemDto(String email, Long itemId);
 
-    List<TodoItemDto> getAllUsersTodoItems(String email, ItemPriority priority);
+    List<TodoItemDto> getAllUsersTodoItems(String email, ItemPriority priority, Boolean complete);
 
     //edit content and priority
     TodoItemDto updateTodoItem(String email, Long itemId, TodoItemRequestDto itemDto);

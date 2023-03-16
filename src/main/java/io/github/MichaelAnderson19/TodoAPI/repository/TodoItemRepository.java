@@ -1,7 +1,6 @@
 package io.github.MichaelAnderson19.TodoAPI.repository;
 
 import io.github.MichaelAnderson19.TodoAPI.model.TodoItem;
-import io.github.MichaelAnderson19.TodoAPI.model.User;
 import io.github.MichaelAnderson19.TodoAPI.shared.ItemPriority;
 import org.springframework.data.jpa.repository.JpaRepository;
 

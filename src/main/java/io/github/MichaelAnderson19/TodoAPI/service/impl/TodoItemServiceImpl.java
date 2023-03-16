@@ -53,11 +53,9 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public List<TodoItemDto> getAllUsersTodoItems(String email, ItemPriority priority) {
+    public List<TodoItemDto> getAllUsersTodoItems(String email, ItemPriority priority, Boolean complete) {
 
         List<TodoItem> items;
-
-        Boolean complete = null;
 
         if (priority != null && complete == null) {
             items = getAllUserItemsByPriority(email, priority);
@@ -69,10 +67,6 @@ public class TodoItemServiceImpl implements TodoItemService {
             items = todoItemRepository.findAllByUserEmail(email);
         }
         return items.stream().map(TodoItemDto::mapToDto).collect(Collectors.toList()); //use object mapper
-//        return todoItemRepository.findAllByUserEmail(email)
-//                .stream()
-//                .map(TodoItemDto::mapToDto)
-//                .collect(Collectors.toList());
     }
 
 

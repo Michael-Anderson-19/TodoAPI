@@ -25,17 +25,20 @@ public class TodoItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<TodoItemDto> getTodoItem(Principal principal, @PathVariable("itemId") Long itemId) {
-        System.out.println("\n\n\n\n\n" +
-                "***********************\ncalling get item " + principal.getName() + " " + itemId);
         TodoItemDto itemDto = todoItemService.getTodoItemDto(principal.getName(), itemId);
         return ResponseEntity.status(HttpStatus.OK).body(itemDto);
     }
 
     @GetMapping({"", "/"})
-    public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(Principal principal, @RequestParam(name = "priority", required = false) ItemPriority priority) {
+    public ResponseEntity<List<TodoItemDto>> getAllTodoItemsForUser(
+            Principal principal,
+            @RequestParam(name = "priority", required = false) ItemPriority priority,
+            @RequestParam(name = "complete", required = false) Boolean complete) {
 
-        List<TodoItemDto> items = todoItemService.getAllUsersTodoItems(principal.getName(), priority);
+        List<TodoItemDto> items = todoItemService.getAllUsersTodoItems(principal.getName(), priority, complete);
+        
         HttpStatus status = HttpStatus.OK;
+
         if (items.size() == 0) status = HttpStatus.NO_CONTENT;
         return ResponseEntity.status(status).body(items
         );

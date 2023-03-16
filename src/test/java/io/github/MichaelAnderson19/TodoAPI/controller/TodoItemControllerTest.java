@@ -60,16 +60,16 @@ public class TodoItemControllerTest {
         itemDtoList.add(itemDto);
 
         when(principal.getName()).thenReturn(testEmail);
-        when(todoItemService.getAllUsersTodoItems(testEmail, null)).thenReturn(itemDtoList);
+        when(todoItemService.getAllUsersTodoItems(testEmail, null, null)).thenReturn(itemDtoList);
 
-        ResponseEntity<List<TodoItemDto>> result = todoItemController.getAllTodoItemsForUser(principal, null);
+        ResponseEntity<List<TodoItemDto>> result = todoItemController.getAllTodoItemsForUser(principal, null, null);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody()).isEqualTo(itemDtoList);
         assertThat(result.getBody().size()).isEqualTo(1);
 
         verify(principal, times(1)).getName();
-        verify(todoItemService, times(1)).getAllUsersTodoItems(testEmail, null);
+        verify(todoItemService, times(1)).getAllUsersTodoItems(testEmail, null, null);
     }
 
     //@Test //https://stackoverflow.com/questions/9419606/unit-testing-a-method-dependent-to-the-request-context

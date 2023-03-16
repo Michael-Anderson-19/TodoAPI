@@ -23,6 +23,7 @@ public class TodoItem extends BaseEntity {
     private String content;
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
+
     private ItemPriority priority;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -30,3 +31,5 @@ public class TodoItem extends BaseEntity {
     @Column(name = "complete")
     private boolean complete;
 }
+
+//TODO - need to implement helper setter methods for other entities to maintain referential integrity, then override all args constructor to use them so the builder uses it

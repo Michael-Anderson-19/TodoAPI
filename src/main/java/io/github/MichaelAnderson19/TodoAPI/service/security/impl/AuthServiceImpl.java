@@ -3,6 +3,7 @@ package io.github.MichaelAnderson19.TodoAPI.service.security.impl;
 import io.github.MichaelAnderson19.TodoAPI.configuration.security.JwtUtils;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.LoginRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RefreshTokenRequest;
+import io.github.MichaelAnderson19.TodoAPI.dto.auth.request.RegistrationRequestDto;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.JwtResponse;
 import io.github.MichaelAnderson19.TodoAPI.dto.auth.response.TokenRefreshResponse;
 import io.github.MichaelAnderson19.TodoAPI.dto.response.UserDto;
@@ -13,11 +14,13 @@ import io.github.MichaelAnderson19.TodoAPI.service.UserService;
 import io.github.MichaelAnderson19.TodoAPI.service.impl.UserServiceImpl;
 import io.github.MichaelAnderson19.TodoAPI.service.security.AuthService;
 import io.github.MichaelAnderson19.TodoAPI.service.security.RefreshTokenService;
+import io.github.MichaelAnderson19.TodoAPI.shared.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
 
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final JwtUtils jwtUtils;
 
@@ -54,12 +58,12 @@ public class AuthServiceImpl implements AuthService {
 
         RefreshToken refreshToken = refreshTokenService.findByToken(refreshTokenRequest.getRefreshToken());
         refreshTokenService.verifyRefreshTokenExpirationDate(refreshToken);
-
         User user = refreshToken.getUser();
+        String newRefreshToken = refreshTokenService.rotateRefreshToken(refreshToken);
         String jwtToken = jwtUtils.generateTokenFromEmail(user.getEmail());
         return TokenRefreshResponse.builder()
                 .jwtToken(jwtToken)
-                .refreshToken(refreshToken.getToken()).build();
+                .refreshToken(newRefreshToken).build();
     }
 
     private Authentication authenticateUser(String email, String password) {
@@ -67,6 +71,12 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(email, password)
         );
         return authentication;
+    }
+
+    public void registerNewUser(RegistrationRequestDto registrationDto) {
+        userService.createUser(registrationDto);
+        //TODO add Builder.Default on setting lists
+        //TODO - need to return true or false (loook at the demo project)
     }
 
     public void logoutUser() {

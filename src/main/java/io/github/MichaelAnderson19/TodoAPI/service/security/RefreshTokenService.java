@@ -14,4 +14,6 @@ public interface RefreshTokenService {
     void deleteToken(String userEmail);
 
     void deleteIfExists(String email);
+
+    String rotateRefreshToken(RefreshToken token);
 }

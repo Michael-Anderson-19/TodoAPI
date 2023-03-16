@@ -21,33 +21,34 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserServiceImpl userService;
+//    private final UserServiceImpl userService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginRequestDto loginRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest)); //TODO error exception to return error message
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register") //TODO implement (think done but need to add boolean and falses based on demo)
     public ResponseEntity createNewUser(@Valid @RequestBody RegistrationRequestDto registrationDto) { //remove return, does not need that
+        authService.registerNewUser(registrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/refresh") //TODO rotate ids (think done)
     public ResponseEntity<TokenRefreshResponse> refreshUsersJWTToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 authService.refreshJwtToken(refreshTokenRequest)
         );
     }
 
-    @GetMapping("/current")
+    @GetMapping("/current") //TODO - this needs to be protected
     public ResponseEntity<UserDto> getCurrentLoggedInUser() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 authService.getCurrentUser()
         );
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/logout") //TODO probably better to have a post request
     public ResponseEntity logoutUser() {
         authService.logoutUser();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

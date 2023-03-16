@@ -32,6 +32,8 @@ public class User extends BaseEntity {
     @Column(name = "roles")
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Builder.Default
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TodoItem> items = new ArrayList<>();

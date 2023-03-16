@@ -40,6 +40,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshToken.getToken();
     }
 
+    public String rotateRefreshToken(RefreshToken token) {
+        UUID newRefreshToken = UUID.randomUUID();
+        token.setToken(newRefreshToken.toString());
+        return refreshTokenRepository.save(token).getToken();
+    }
+
     @Override
     public RefreshToken verifyRefreshTokenExpirationDate(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
