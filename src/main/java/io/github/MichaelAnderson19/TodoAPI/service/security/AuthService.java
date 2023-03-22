@@ -12,7 +12,7 @@ public interface AuthService {
 
     JwtResponse login(LoginRequestDto loginRequest);
 
-    void logoutUser(); //TODO could return true / false
+    void logoutUser();
 
     void registerNewUser(RegistrationRequestDto registrationDto);
 

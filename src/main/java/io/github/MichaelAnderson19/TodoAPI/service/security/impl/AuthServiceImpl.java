@@ -75,8 +75,6 @@ public class AuthServiceImpl implements AuthService {
 
     public void registerNewUser(RegistrationRequestDto registrationDto) {
         userService.createUser(registrationDto);
-        //TODO add Builder.Default on setting lists
-        //TODO - need to return true or false (loook at the demo project)
     }
 
     public void logoutUser() {

@@ -38,7 +38,7 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public TodoItem getTodoItem(String email, Long itemId) { //TODO could mark as private
+    public TodoItem getTodoItem(String email, Long itemId) {
         return todoItemRepository.findByIdAndUserEmail(itemId, email)
                 .orElseThrow(() -> new TodoItemNotFoundException(
                         String.format("Error: Todo Item not found")
@@ -82,10 +82,8 @@ public class TodoItemServiceImpl implements TodoItemService {
         return todoItemRepository.findAllByUserEmailAndPriorityAndComplete(email, priority, complete);
     }
 
-
-    //edit content and priority
     @Override
-    public TodoItemDto updateTodoItem(String email, Long itemId, TodoItemRequestDto itemDto) { //TODO needs its own dto??
+    public TodoItemDto updateTodoItem(String email, Long itemId, TodoItemRequestDto itemDto) {
         TodoItem item = getTodoItem(email, itemId);
         item.setContent(itemDto.getContent());
         item.setPriority(ItemPriority.valueOf(itemDto.getPriority()));

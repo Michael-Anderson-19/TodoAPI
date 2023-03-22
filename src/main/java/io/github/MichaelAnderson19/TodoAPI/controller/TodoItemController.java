@@ -36,7 +36,7 @@ public class TodoItemController {
             @RequestParam(name = "complete", required = false) Boolean complete) {
 
         List<TodoItemDto> items = todoItemService.getAllUsersTodoItems(principal.getName(), priority, complete);
-        
+
         HttpStatus status = HttpStatus.OK;
 
         if (items.size() == 0) status = HttpStatus.NO_CONTENT;
@@ -52,8 +52,9 @@ public class TodoItemController {
         return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(itemDto);
     }
 
-    @GetMapping("/toggle/{itemId}")
+    @PatchMapping("/toggle/{itemId}")
     public ResponseEntity<TodoItemDto> toggleItemComplete(Principal principal, @PathVariable("itemId") Long itemId) {
+        //TODO IMPLEMENT
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

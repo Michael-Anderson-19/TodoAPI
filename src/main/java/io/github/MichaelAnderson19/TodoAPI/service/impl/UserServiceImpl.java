@@ -82,7 +82,6 @@ public class UserServiceImpl implements UserService {
         if (!deleteUserDto.getEmail().equals(principalEmail)) {
             throw new InvalidCredentialsException("Error: email does not match");
         }
-        //TODO refactor this and use getUser
         User user = userRepository.findByEmail(deleteUserDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(String.format("user with email %s not found", principalEmail)));
 
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserDto(String email) {
         User user = getUser(email);
-        return UserDto.builder().email(user.getEmail()).username(user.getUsername()).build();
+        return UserDto.builder().email(user.getEmail()).username(user.getUsername()).role(user.getRole().name()).build();
     }
 
     private boolean verifyPassword(String rawPassword, String encodedPassword) {

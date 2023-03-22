@@ -50,9 +50,9 @@ public class JwtUtils {
         return expirationDate.before(new Date());
     }
 
-    public boolean validateTokenCredentials(String token, UserDetails userDetails) { //token details validation
+    public boolean validateTokenCredentials(String token, UserDetails userDetails) {
         final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token)); //think this one is repeat of the below one, don't think need both
+        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public boolean validateToken(String token) {

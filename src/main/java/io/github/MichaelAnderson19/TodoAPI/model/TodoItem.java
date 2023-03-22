@@ -32,4 +32,4 @@ public class TodoItem extends BaseEntity {
     private boolean complete;
 }
 
-//TODO - need to implement helper setter methods for other entities to maintain referential integrity, then override all args constructor to use them so the builder uses it
+//TODO - implement helper setter and getter methods for managing referential integrity of relationships
